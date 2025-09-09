@@ -1,10 +1,9 @@
-#container {
-  display: flex;
-  align-items: center; 
-  justify-content: center;
+#body {
+  display: column;
+  align-items: center;
 }
  
 #gameCanvas {
-  height: 50%;
-  width: 50%;
+  height: 100%;
+  width: 100%;
 }

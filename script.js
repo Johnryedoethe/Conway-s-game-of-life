@@ -20,9 +20,21 @@ let state1 = [
   [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
   [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
 ]
- 
+
 
 const SIZE = 20
+
+const generation = document.getElementById("generation")
+const updatedGeneration = 1
+let run = false
+
+const findGeneration = () => {
+  run = true;
+  if (run) {
+    generation.textContent = updatedGeneration++
+  }
+}
+
 
 // a new state for data, update with different arrays
 // 2 dimensional arrays include columns and rows, includes 2 loops
@@ -121,13 +133,12 @@ let currentState = state1
 function generateNextStateAndVisualize() {
   const newState = generateNextState(currentState)
   console.log(newState)
-  
+
   currentState = newState
   drawGrid(currentState)
-  generation.textContent = updatedGeneration++
 
   findPopulation()
+  findGeneration()
 }
 
-setInterval(generateNextStateAndVisualize, 100)
 setInterval(generateNextStateAndVisualize, 1000)

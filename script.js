@@ -26,8 +26,9 @@ const SIZE = 20
 
 const generation = document.getElementById("generation")
 const updatedGeneration = 1
+let generation = document.getElementById("generation")
 let updatedGeneration = 1
-let run = false
+const run = false
 
 const findGeneration = () => {
   run = true;

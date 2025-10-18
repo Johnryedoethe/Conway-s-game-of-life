@@ -1,42 +1,29 @@
 let state1 = [
-  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 1, 0, 0, 0],
+  [0, 0, 1, 1, 0, 0, 0],
+  [0, 0, 0, 1, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0],
 ]
 
 
-const SIZE = 20
+const SIZE = 7
 
 const generation = document.getElementById("generation")
-const updatedGeneration = 1
-let generation = document.getElementById("generation")
+const population = document.getElementById("population")
 let updatedGeneration = 1
-const run = false
+let currentPopulation = 0
 
 const findGeneration = () => {
-  run = true;
-  if (run) {
-    generation.textContent = updatedGeneration++
-  }
+  generation.textContent = updatedGeneration++
 }
 
+const accFunc = (acc, s) => {
+  const newAcc = acc + s
+  return newAcc
+}
 
 // a new state for data, update with different arrays
 // 2 dimensional arrays include columns and rows, includes 2 loops
@@ -81,7 +68,6 @@ function countLiveNeighbors(state, row, col) {
       }
     }
   }
-
   return sum
 }
 
@@ -117,7 +103,7 @@ function generateNextState(state) {
 const canvas = document.getElementById("gameCanvas")
 canvas.id = canvas
 const ctx = canvas.getContext("2d");
-const CELL_SIZE = 5; // Pixel size of each cell in cavas
+const CELL_SIZE = 10; // Pixel size of each cell in cavas
 
 function drawGrid(state) {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -134,13 +120,36 @@ let currentState = state1
 
 function generateNextStateAndVisualize() {
   const newState = generateNextState(currentState)
-  console.log(newState)
 
   currentState = newState
   drawGrid(currentState)
 
-  findPopulation()
   findGeneration()
+  let pop = currentState.reduce(accFunc, 0)
+  console.log(pop)
+  population.textContent = pop
 }
 
-setInterval(generateNextStateAndVisualize, 1000)
+// setInterval(generateNextStateAndVisualize, 100)
+const runButton = document.getElementById("run")
+const stopButton = document.getElementById("stop")
+let running = false
+
+const checkIfRunning = () => {
+  if (!running) {
+    return
+  } else {
+    generateNextStateAndVisualize()
+  }
+}
+
+runButton.addEventListener("click", () => {
+  running = true
+  checkIfRunning()
+}) 
+  
+stopButton.addEventListener("click", () => {
+  running = false
+  checkIfRunning()
+  console.log(running)
+}) 

@@ -1,10 +1,10 @@
 let state1 = [
   [0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0, 0],
   [0, 0, 0, 1, 0, 0, 0],
-  [0, 0, 1, 1, 0, 0, 0],
   [0, 0, 0, 1, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 1, 1, 1, 1, 0],
+  [0, 0, 0, 1, 0, 1, 0],
+  [0, 0, 0, 0, 0, 1, 0],
   [0, 0, 0, 0, 0, 0, 0],
 ]
 
@@ -22,7 +22,7 @@ const findGeneration = () => {
 
 const accFunc = (acc, s) => {
   const newAcc = acc + s
-  return newAcc
+  return acc + s.reduce((rowSum, num) => rowSum + num, 0)
 }
 
 // a new state for data, update with different arrays
@@ -126,7 +126,7 @@ function generateNextStateAndVisualize() {
 
   findGeneration()
   let pop = currentState.reduce(accFunc, 0)
-  console.log(pop)
+  console.log(currentState)
   population.textContent = pop
 }
 

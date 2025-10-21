@@ -1,26 +1,36 @@
 let state1 = [
-  [0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 1, 0, 0, 0],
-  [0, 0, 0, 1, 0, 0, 0],
-  [0, 0, 1, 1, 1, 1, 0],
-  [0, 0, 0, 1, 0, 1, 0],
-  [0, 0, 0, 0, 0, 1, 0],
-  [0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 1, 1, 0],
+  [0, 0, 0, 1, 1, 1, 0, 1, 1, 0],
+  [0, 0, 0, 0, 0, 1, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 1, 0, 0, 0, 0],
+  [0, 0, 1, 0, 0, 0, 0, 0, 0, 0],
+  [0, 1, 1, 0, 0, 0, 0, 1, 0, 0],
+  [0, 0, 1, 0, 0, 0, 1, 1, 1, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
 ]
+let currentState = state1
+// immutable data that will be updated (this will only run once and then currentState
+// will be updated through nextState and then will be visualised, this will carry on to the next state)
 
-
-const SIZE = 7
+const SIZE = 10
 
 const generation = document.getElementById("generation")
 const population = document.getElementById("population")
 let updatedGeneration = 1
 let currentPopulation = 0
 
-const findGeneration = () => {
+const updGeneration = () => {
   generation.textContent = updatedGeneration++
 }
 
-const accFunc = (acc, s) => {
+const updPopulation = () => {
+  let pop = currentState.reduce(populationSum, 0)
+  population.textContent = pop
+}
+
+const populationSum = (acc, s) => {
   const newAcc = acc + s
   return acc + s.reduce((rowSum, num) => rowSum + num, 0)
 }
@@ -73,12 +83,10 @@ function countLiveNeighbors(state, row, col) {
 
 function generateNextState(state) {
   const nextState = createNewEmptyState()
-
   for (let row = 0; row < SIZE; row++) {
     for (let col = 0; col < SIZE; col++) {
       const cellValue = state[row][col]
       const numLiveNeighbors = countLiveNeighbors(state, row, col)
-
       // Any live cell with fewer than two live neighbours dies, as if by underpopulation.
       // Any live cell with two or three live neighbours lives on to the next generation.
       // Any live cell with more than three live neighbours dies, as if by overpopulation.
@@ -116,7 +124,6 @@ function drawGrid(state) {
   }
 }
 
-let currentState = state1
 
 function generateNextStateAndVisualize() {
   const newState = generateNextState(currentState)
@@ -124,15 +131,14 @@ function generateNextStateAndVisualize() {
   currentState = newState
   drawGrid(currentState)
 
-  findGeneration()
-  let pop = currentState.reduce(accFunc, 0)
-  console.log(currentState)
-  population.textContent = pop
+  updGeneration()
+  updPopulation()
 }
 
 // setInterval(generateNextStateAndVisualize, 100)
 const runButton = document.getElementById("run")
 const stopButton = document.getElementById("stop")
+const repeatButton = document.getElementById("repeat")
 let running = false
 
 const checkIfRunning = () => {
@@ -146,10 +152,17 @@ const checkIfRunning = () => {
 runButton.addEventListener("click", () => {
   running = true
   checkIfRunning()
-}) 
-  
+})
+
 stopButton.addEventListener("click", () => {
   running = false
   checkIfRunning()
-  console.log(running)
+  setTimeout(generateNextStateAndVisualize, 0)
+})
+
+repeatButton.addEventListener("click", () => {
+  running = true
+  if (running) {
+    setInterval(generateNextStateAndVisualize, 0)
+  }
 }) 
